@@ -116,7 +116,7 @@ speak_spanish_5_17
 
 PUT ANSWER HERE
 
-While this data is not properly arranged as it is lacking the "arrange(desc)" function, it is clear that Baltimore county has the highest percentage of spanish speakers in the age group of 5-17. This result makes sense as it is the largest city in the state which is generally where most immigrants live in. Garrett county has an interestingly low result. However, it is also a very rural county where not many immigrant families live. 
+While this data is not properly arranged as it is lacking the "arrange(desc)" function, it is clear that Baltimore county has the highest percentage of spanish speakers in the age group of 5-17. This result makes sense as it is the largest city in the state which is generally where most immigrants live in. Garrett county has an interestingly low result. However, it is also a very rural county where immigrant families are not likely to live in. 
 
 **Q5** Pennsylvanians are currently requesting and submitting mail ballots for the November election. You'd like to know more about the people who live in the areas sending in mail ballots. Read in the `zip_totals.csv` file in the data folder containing the number of returned mail ballots per zip code. Then create a dataframe of Pennsylvania ZCTAs that include the following variables from the 2019 ACS: total population and median income. You will need to add `output = "wide"` to the get_acs function so that you get columns for those two variables' estimates and margins of error.
 
