@@ -1,6 +1,6 @@
 ---
 title: "Tidyverse Census Assignment"
-author: "Your Name Here"
+author: "Lucas Saiz"
 format: html
 ---
 
@@ -35,7 +35,7 @@ You'll need your Census API Key:
 
 ```{r echo=FALSE}
 
-myapikey <- "YOUR API KEY"
+myapikey <- "2a6f8c21a30d3024e038d67d7d4eba647dc79cd4"
 
 census_api_key(myapikey, overwrite=TRUE)
 ```
@@ -47,7 +47,7 @@ You'll also need to load the list of American Community Survey variables from th
 **Task** load the variables from the 2021 5-year ACS and save them to a dataframe
 
 ```{r}
-
+v20 <- load_variables(2021, "acs5", cache=TRUE)
 
 ```
 
@@ -57,7 +57,12 @@ You'll also need to load the list of American Community Survey variables from th
 
 ```{r}
 
+md_median_age <- get_acs(geography = 'county', 
+                         variables = c(median_age = 'B01002_001'), 
+                         state = 'MD')
 
+md_median_age %>% 
+  arrange(estimate)
 
 
 
@@ -70,7 +75,8 @@ You'll also need to load the list of American Community Survey variables from th
 ```{r}
 
 
-
+md_median_age %>% 
+  filter(estimate > 50)
 
 ```
 
@@ -84,7 +90,14 @@ Which county has the highest percentage of 5-17 year-olds who speak Spanish at h
 ```{r}
 
 
+speak_spanish_5_17 <- get_acs(geography = 'county', 
+                              variables = c(speak_spanish_5_17 = 'B16004_005'), 
+                              state = 'MD', 
+                              year = 2020) %>%
+                      rename('speak_spanish_5_17' = 'estimate') %>%
+                      select(variable)
 
+speak_spanish_5_17
 
 
 
