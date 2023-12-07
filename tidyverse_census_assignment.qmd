@@ -53,13 +53,13 @@ v20 <- load_variables(2021, "acs5", cache=TRUE)
 
 ## Answer questions
 
-**Q1** What is the Maryland jurisdiction with the lowest median age, according to the ACS 2021 5-year estimates? You will need to find the variable for median age first. 
+**Q1** What is the Florida jurisdiction with the lowest median age, according to the ACS 2021 5-year estimates? You will need to find the variable for median age first. 
 
 ```{r}
 
 md_median_age <- get_acs(geography = 'county', 
                          variables = c(median_age = 'B01002_001'), 
-                         state = 'MD')
+                         state = 'FL')
 
 md_median_age %>% 
   arrange(estimate)
@@ -70,7 +70,7 @@ md_median_age %>%
 ```
 
 
-**Q2** Which Maryland counties have a median age of at least 50? You can use the dataframe you just made to answer this, but you must write code to display only those counties with a median age of at least 50. 
+**Q2** Which Florida counties have a median age of at least 50? You can use the dataframe you just made to answer this, but you must write code to display only those counties with a median age of at least 50. 
 
 ```{r}
 
@@ -81,18 +81,20 @@ md_median_age %>%
 ```
 
 
-**Q3** We're interested in knowing which Maryland counties have the highest percentage of 5-17 year-olds who speak Spanish at home and *also* speak English fluently. Start with the code you wrote for Q1 and alter it to show the total population of 5-17 year-olds by county. Then create a second dataframe to show the number of 5-17 year-olds by county living in homes where Spanish is spoken but who speak English "very well" according to the ACS. To do this, you will need to find the ACS variables that represent those subjects. HINT: the phrase "very well" shows up in multiple variables - you want the one that doesn't include other factors like citizenship.
+**Q3** We're interested in knowing which Florida counties have the highest percentage of 5-17 year-olds who speak Spanish at home and *also* speak English fluently. Start with the code you wrote for Q1 and alter it to show the total population of 5-17 year-olds by county. Then create a second dataframe to show the number of 5-17 year-olds by county living in homes where Spanish is spoken but who speak English "very well" according to the ACS. To do this, you will need to find the ACS variables that represent those subjects. HINT: the phrase "very well" shows up in multiple variables - you want the one that doesn't include other factors like citizenship.
 
 For each dataframe, rename the `estimate` column to a meaningful name you've given the ACS variable, remove the `variable` columns in each using select and then join them on GEOID and NAME. Then you can add a column to calculate the percentage of the total 5-17 population that speaks Spanish at home.
 
 Which county has the highest percentage of 5-17 year-olds who speak Spanish at home and also speak English very well?
+
+This should be an interesting result as south Florida has a very prominent hispanic population. 
 
 ```{r}
 
 
 speak_spanish_5_17 <- get_acs(geography = 'county', 
                               variables = c(speak_spanish_5_17 = 'B16004_005'), 
-                              state = 'MD', 
+                              state = 'FL', 
                               year = 2020) %>%
                       rename('speak_spanish_5_17' = 'estimate') %>%
                       select(-variable) 
@@ -112,7 +114,7 @@ speak_spanish_5_17
 ```
 
 
-**Q4** Given the counties with the largest percentage of 5-17 year-olds that speak Spanish at home, which county stands out to you in the data as different from the others? How would you describe the top 5 counties? How would you describe Garrett County's numbers?
+**Q4** Given the counties with the largest percentage of 5-17 year-olds that speak Spanish at home, which county stands out to you in the data as different from the others? How would you describe the top 5 counties? How would you describe Alachua County's numbers?
 
 PUT ANSWER HERE
 
@@ -146,7 +148,7 @@ zip_totals
 
 
 pa_zips <- get_acs(geography = 'zcta', 
-                   state = 'PA', 
+                   state = 'FL', 
                    variables = c(total_pop = 'B01003_001', median_income = 'B19013_001'), 
                    year = 2019, 
                    output = "wide")

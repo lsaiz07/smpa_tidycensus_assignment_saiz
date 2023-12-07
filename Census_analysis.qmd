@@ -1,0 +1,159 @@
+---
+title: "Census Analysis"
+format: html
+editor: visual
+---
+
+## **Q1** What is the Florida jurisdiction with the lowest median age, according to the ACS 2021 5-year estimates? You will need to find the variable for median age first.
+
+```         
+md_median_age <- get_acs(geography = 'county', 
+                         variables = c(median_age = 'B01002_001'), 
+                         state = 'FL')
+```
+
+```         
+Getting data from the 2017-2021 5-year ACS
+```
+
+```         
+md_median_age %>% 
+  arrange(estimate)
+```
+
+```         
+# A tibble: 67 × 5
+   GEOID NAME                     variable   estimate   moe
+   <chr> <chr>                    <chr>         <dbl> <dbl>
+ 1 12073 Leon County, Florida     median_age     31.6   0.2
+ 2 12001 Alachua County, Florida  median_age     32.1   0.2
+ 3 12051 Hendry County, Florida   median_age     35.1   0.9
+ 4 12049 Hardee County, Florida   median_age     35.6   0.4
+ 5 12095 Orange County, Florida   median_age     35.7   0.1
+ 6 12097 Osceola County, Florida  median_age     36.3   0.3
+ 7 12031 Duval County, Florida    median_age     36.5   0.1
+ 8 12091 Okaloosa County, Florida median_age     36.9   0.3
+ 9 12003 Baker County, Florida    median_age     37     0.7
+10 12033 Escambia County, Florida median_age     37.5   0.2
+# ℹ 57 more rows
+```
+
+**Q2** Which Florida counties have a median age of at least 50? You can use the dataframe you just made to answer this, but you must write code to display only those counties with a median age of at least 50.
+
+```         
+md_median_age %>% 
+  filter(estimate > 50)
+```
+
+```         
+# A tibble: 9 × 5
+  GEOID NAME                         variable   estimate   moe
+  <chr> <chr>                        <chr>         <dbl> <dbl>
+1 12015 Charlotte County, Florida    median_age     59.7   0.3
+2 12017 Citrus County, Florida       median_age     56.8   0.3
+3 12021 Collier County, Florida      median_age     51.5   0.2
+4 12035 Flagler County, Florida      median_age     52     0.3
+5 12055 Highlands County, Florida    median_age     53.7   0.3
+6 12061 Indian River County, Florida median_age     54.2   0.1
+7 12085 Martin County, Florida       median_age     52.9   0.3
+8 12115 Sarasota County, Florida     median_age     56.5   0.2
+9 12119 Sumter County, Florida       median_age     68.1   0.3
+```
+
+**Q3** We\'re interested in knowing which Florida counties have the highest percentage of 5-17 year-olds who speak Spanish at home and *also* speak English fluently. Start with the code you wrote for Q1 and alter it to show the total population of 5-17 year-olds by county. Then create a second dataframe to show the number of 5-17 year-olds by county living in homes where Spanish is spoken but who speak English \"very well\" according to the ACS. To do this, you will need to find the ACS variables that represent those subjects. HINT: the phrase \"very well\" shows up in multiple variables - you want the one that doesn\'t include other factors like citizenship.
+
+For each dataframe, rename the `estimate` column to a meaningful name you\'ve given the ACS variable, remove the `variable` columns in each using select and then join them on GEOID and NAME. Then you can add a column to calculate the percentage of the total 5-17 population that speaks Spanish at home.
+
+Which county has the highest percentage of 5-17 year-olds who speak Spanish at home and also speak English very well?
+
+This should be an interesting result as south Florida has a very prominent hispanic population.
+
+```         
+speak_spanish_5_17 <- get_acs(geography = 'county', 
+                              variables = c(speak_spanish_5_17 = 'B16004_005'), 
+                              state = 'FL', 
+                              year = 2020) %>%
+                      rename('speak_spanish_5_17' = 'estimate') %>%
+                      select(-variable) 
+```
+
+```         
+Getting data from the 2016-2020 5-year ACS
+```
+
+```         
+speak_spanish_5_17
+```
+
+```         
+# A tibble: 67 × 4
+   GEOID NAME                      speak_spanish_5_17   moe
+   <chr> <chr>                                  <dbl> <dbl>
+ 1 12001 Alachua County, Florida                 1110   275
+ 2 12003 Baker County, Florida                     52    76
+ 3 12005 Bay County, Florida                      546   205
+ 4 12007 Bradford County, Florida                  52    43
+ 5 12009 Brevard County, Florida                 3246   623
+ 6 12011 Broward County, Florida                60971  2007
+ 7 12013 Calhoun County, Florida                    0    23
+ 8 12015 Charlotte County, Florida               1104   246
+ 9 12017 Citrus County, Florida                   667   287
+10 12019 Clay County, Florida                    1425   404
+# ℹ 57 more rows
+```
+
+**Q4** Given the counties with the largest percentage of 5-17 year-olds that speak Spanish at home, which county stands out to you in the data as different from the others? How would you describe the top 5 counties? How would you describe Alachua County\'s numbers?
+
+PUT ANSWER HERE
+
+While this data is not properly arranged as it is lacking the \"arrange(desc)\" function, it is clear that Baltimore county has the highest percentage of spanish speakers in the age group of 5-17. This result makes sense as it is the largest city in the state which is generally where most immigrants live in. Garrett county has an interestingly low result. However, it is also a very rural county where immigrant families are not likely to live in.
+
+**Q5** Pennsylvanians are currently requesting and submitting mail ballots for the November election. You\'d like to know more about the people who live in the areas sending in mail ballots. Read in the `zip_totals.csv` file in the data folder containing the number of returned mail ballots per zip code. Then create a dataframe of Pennsylvania ZCTAs that include the following variables from the 2019 ACS: total population and median income. You will need to add `output = "wide"` to the get_acs function so that you get columns for those two variables\' estimates and margins of error.
+
+Join the ZCTA dataframe to the zip totals dataframe and calculate a per capita rate for mail ballots per 100 population in each ZCTA, and write code to answer the following questions?
+
+-   Which zip code *that has returned at least 100 mail ballots* has the highest per capita rate?
+
+-   Where is that zip code and what does Census Reporter say about its demographics?
+
+-   For zip codes with a per capita rate of at least 10 returned ballots per 100 people, how many have median incomes of at least \$100,000?
+
+-   How many have median incomes less than the state figure of \$68,957?
+
+-   What\'s the most interesting one from this last result?
+
+```         
+zip_totals <- read_csv("data/pa_zip_totals.csv")
+```
+
+```         
+Rows: 5181 Columns: 2
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (1): zip
+dbl (1): count
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+```
+
+```         
+zip_totals
+```
+
+```         
+# A tibble: 5,181 × 2
+   zip   count
+   <chr> <dbl>
+ 1 00048     1
+ 2 00136     2
+ 3 00153     2
+ 4 00160     1
+ 5 00165     1
+ 6 00168     1
+ 7 00187     1
+ 8 00195     1
+ 9 00196     2
+10 00260     1
+# ℹ 5,171 more rows
+```
